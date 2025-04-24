@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Game Recommender, CAP5771 Project, Haylee Zuba</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #21002B;
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+      overflow: hidden;
+    }
+
+    {/*Allows input*/}
+    .main-circle {
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #FB10FF 0%, #970999 100%);
+      box-shadow: 0 0 40px #FB10FF;
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .main-circle input {
+      border: none;
+      outline: none;
+      font-size: 18px;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+      width: 80%;
+    }
+
+    .output {
+      position: absolute;
+      top: 70%;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+
+    {/*Surrounding circle with song suggestions*/}
+    .floating-circle {
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #962999 0%, #970999 100%);
+      box-shadow: 0 0 40px #FB10FF;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      animation: float 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes float {
+      from {
+        transform: translateY(0px);
+      }
+      to {
+        transform: translateY(15px);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main-circle">
+    <label for="songInput">Enter a song title:</label>
+    <input type="text" id="songInput" placeholder="ex: Prom">
+  </div>
+
+  <div class="output" id="outputContainer">
+
+  </div>
+
+
+  <!-- Example circles for aesthetics -->
+  <div class="floating-circle" style="top: 10%; left: 30%;">Blinding Lights</div>
+  <div class="floating-circle" style="top: 45%; left: 20%;">Bad Guy</div>
+  <div class="floating-circle" style="top: 25%; left: 70%;">Take On Me</div>
+  <div class="floating-circle" style="top: 60%; left: 75%;">Get Lucky</div>
+  <div class="floating-circle" style="top: 0%; left: 55%;">Mr. Brightside</div>
+
+
+  <!-- Links the predictions from the ML model (too big to connect via backend) -->
+  <script src="predictions.js"></script>
+  <script>
+    const input = document.getElementById("songInput");
+    const output = document.getElementById("outputContainer");
+
+    input.addEventListener("change", () => {
+      const song = input.value.trim();
+      if (predictions[song]) {
+        const result = predictions[song];
+        output.innerHTML = `
+          <h2>Game Recommendation: ${result.game}</h2>
+          <p>Accuracy: ${result.accuracy} | F1 Score: ${result.f1_score} | Precision: ${result.precision}</p>
+        `;
+      } else {
+        output.innerHTML = `<p style="color: pink;">Song not found. Try another!</p>`;
+      }
+    });
+  </script>
+</body>
+</html>
